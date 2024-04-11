@@ -1,0 +1,61 @@
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Langar", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h1 {
+  font-size: 128px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+
+  -webkit-text-stroke-color: #302ce8;
+  -webkit-text-stroke-width: 1px;
+
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+
+  color: #fff;
+}
+
+button {
+  display: flex;
+  padding: 1.25rem 2.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 0.5rem;
+  border: 1px solid #302ce8;
+  background: #fff;
+
+  font-family: "Langar", system-ui;
+  color: #302ce8;
+  text-align: center;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+button:active {
+  background: #302ce8;
+  color: #fff;
+}

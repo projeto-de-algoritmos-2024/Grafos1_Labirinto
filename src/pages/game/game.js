@@ -13,36 +13,38 @@ export default function Game() {
 
   return (
     <div>
-      <div className="container-buttons">
-        <div className="container-out">
-          <button
-            className="arrow-left button-horizontal"
-            onClick={() => setBackgroundText("TrasFrenteEsq")}
-          >
-            <img src={setaEsquerda} alt={`Seta para direita`} />
-          </button>
-          <div className="container-in">
+      {backgroundText !== "Fim" && (
+        <div className="container-buttons">
+          <div className="container-out">
             <button
-              className="arrow-up button-vertical"
-              onClick={() => setBackgroundText("TrasFrente")}
+              className="arrow-left button-horizontal"
+              onClick={() => setBackgroundText("TrasFrenteEsq")}
             >
-              <img src={setaFrente} alt={`Seta para direita`} />
+              <img src={setaEsquerda} alt={`Seta para direita`} />
             </button>
+            <div className="container-in">
+              <button
+                className="arrow-up button-vertical"
+                onClick={() => setBackgroundText("TrasFrente")}
+              >
+                <img src={setaFrente} alt={`Seta para direita`} />
+              </button>
+              <button
+                className="arrow-down button-vertical"
+                onClick={() => setBackgroundText("Tras")}
+              >
+                <img src={setaTras} alt={`Seta para direita`} />
+              </button>
+            </div>
             <button
-              className="arrow-down button-vertical"
-              onClick={() => setBackgroundText("Tras")}
+              className="arrow-right button-horizontal"
+              onClick={() => setBackgroundText("TrasFrenteDir")}
             >
-              <img src={setaTras} alt={`Seta para direita`} />
+              <img src={setaDireita} alt={`Seta para direita`} />
             </button>
           </div>
-          <button
-            className="arrow-right button-horizontal"
-            onClick={() => setBackgroundText("TrasFrenteDir")}
-          >
-            <img src={setaDireita} alt={`Seta para direita`} />
-          </button>
         </div>
-      </div>
+      )}
 
       <Background text={backgroundText} />
     </div>

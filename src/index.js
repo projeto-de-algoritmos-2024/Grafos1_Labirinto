@@ -6,7 +6,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Menu from "./pages/menu/menu.js";
 import Game from "./pages/game/game.js";
-import End from "./pages/end/end.js";
 
 const router = createBrowserRouter([
   {
@@ -16,10 +15,6 @@ const router = createBrowserRouter([
   {
     path: "/game",
     element: <Game />,
-  },
-  {
-    path: "/end",
-    element: <End />,
   },
 ]);
 

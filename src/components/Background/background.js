@@ -27,24 +27,6 @@ export default function Background(props) {
 
   return (
     <div>
-      {props.text === "Fim" && (
-        <div className="container-center-end">
-          <div className="container">
-            <div className="container-text">
-              <h1>Parabéns</h1>
-              <p>
-                Você terminou o labirinto e agora pode rejogar e chegar no final
-                por um caminho mais curto.
-              </p>
-            </div>
-
-            <Link to="/">
-              <button className="button-play"> Voltar para o menu </button>
-            </Link>
-          </div>
-        </div>
-      )}
-
       <div className="background">
         <img src={svgPath} alt={`Background for ${props.text}`} />
       </div>

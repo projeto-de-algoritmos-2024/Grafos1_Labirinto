@@ -1,5 +1,5 @@
 import "./game.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import setaDireita from "./assets/seta-direita.svg";
 import setaEsquerda from "./assets/seta-esquerda.svg";
@@ -12,35 +12,63 @@ import { Link } from "react-router-dom";
 export default function Game() {
 
   const [backgroundText, setBackgroundText] = useState("");
-  const [posicao, setPosicao] = useState([0,0]); // posicao inicial
-  const [passos, setPassos] = useState(0)
+  const [posicao, setPosicao] = useState([0,0]);
+  const [passos, setPassos] = useState(0);
+  const [caminho, setCaminho] = useState(0);
   
-  // cria grafo
-  const tamanho = 5;
-  let grafo = new Array(tamanho);
-  for (let i = 0; i < tamanho; i++) {
-    grafo[i] = new Array(tamanho).fill(0);
+  // cria labirinto
+  const labirinto = [
+    [1,1,1,0,0],
+    [0,1,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,1,-2],
+    [0,0,0,0,0]
+  ]
+  const tamanho = labirinto[1].length;
+
+  function BuscaProfundidade(){
+      let cam = 0;
+      const fila = []
+      const visitados = []
+
+      fila.push([0,0]);
+      visitados.push([0,0]);
+
+      var frente, tras, direita, esquerda;
+      while (fila.length > 0){
+        const vertice = fila.pop();
+        if(labirinto[vertice[0]][vertice[1]] === -2 ){ 
+          setCaminho(cam);
+        }
+
+        // inicia posicao somente se não extrapolar algum limite do labirinto
+        frente = tras = direita = esquerda = null;
+        if(vertice[0]+1 < tamanho) frente = [vertice[0]+1,vertice[1]];
+        if(vertice[0]-1 > 0) tras = [vertice[0]-1,vertice[1]];
+        if(vertice[1]+1 < tamanho) direita = [vertice[0],vertice[1]+1];
+        if(vertice[1]-1 > 0) esquerda = [vertice[0],vertice[1]-1];
+
+        const dir = [frente,tras,direita,esquerda];
+        for(let i of dir){
+          console.log(i)
+          if(i && labirinto[i[0]][i[1]] === 1 && visitados.indexOf(i) === -1){
+            visitados.push(i);
+            fila.push(i);
+          }
+        }
+        ++cam;
+      }
   }
-  
-  // i(linha), j(coluna)
-  grafo[0][0] = 1; 
-  grafo[0][1] = 1;
-  grafo[0][2] = 1;
-  grafo[1][2] = 1;
-  grafo[2][2] = 1;
-  grafo[3][2] = 1;
-  grafo[3][3] = 1;
-  grafo[3][4] = -2; // saida
-  
+
   function mudaPosicao(i,j){
     // extrapola os limites do labirinto
-    if(i > 0 && posicao[0]+i > tamanho) return;
-    else if(i < 0 && posicao[0]+i < 0) return;
-    else if(j > 0 && posicao[1]+j > tamanho) return;
-    else if(j < 0 && posicao[1]-1 < 0) return;
+    if(posicao[0]+i > tamanho) return;
+    else if(posicao[0]+i < 0) return;
+    else if(posicao[1]+j > tamanho) return;
+    else if(posicao[1]+j < 0) return;
 
     // não tem caminho para esta direcao
-    if(grafo[posicao[0]+i][posicao[1]+j] === 0){
+    if(labirinto[posicao[0]+i][posicao[1]+j] === 0){
       return;
     }
     
@@ -59,10 +87,10 @@ export default function Game() {
 
   return (
     <div>
-      { grafo[posicao[0]][posicao[1]] !== -2 && (
+      { labirinto[posicao[0]][posicao[1]] !== -2 && (
         <div className="container-buttons">
           <div className="container-out">
-          <h2>{grafo[posicao[0]][posicao[1]]}</h2>
+          <h2>{labirinto[posicao[0]][posicao[1]]}</h2>
           <p>{posicao[0]}, {posicao[1]}</p>
 
              <button
@@ -97,7 +125,8 @@ export default function Game() {
           </div>
         </div>
       )}
-      { grafo[posicao[0]][posicao[1]] === -2 && (
+
+      { labirinto[posicao[0]][posicao[1]] === -2 && (
         <div className="container-center-end">
           <div className="container">
             <div className="container-text">

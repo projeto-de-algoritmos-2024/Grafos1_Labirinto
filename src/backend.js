@@ -27,7 +27,7 @@ grafo[3][4] = 2; // saida
 grafo[4][0] = 1;
 grafo[4][1] = 1;
 
-return grafo;
+export default grafo;
 
 // for (let i = 0; i < tamanho; i++) {
 //     process.stdout.write(grafo[i].join(' '));

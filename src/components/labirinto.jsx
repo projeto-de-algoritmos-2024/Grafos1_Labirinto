@@ -5,15 +5,15 @@ class Labirinto extends React.Component {
     super(props);
     this.state = {
       labirinto: [
-        [1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 1],
-        [1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 1],
+        [0, 0, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 1, 1],
+        [1, 1, 0, 0, 0],
         [1, 1, 1, 1, 1]
       ], // 1 representa parede, 0 representa caminho
       personagem: {
-        x: 1, // coordenada x inicial do personagem
-        y: 1  // coordenada y inicial do personagem
+        x: 0, // coordenada x inicial do personagem
+        y: 0  // coordenada y inicial do personagem
       }
     };
   }

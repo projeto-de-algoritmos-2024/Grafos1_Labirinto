@@ -1,8 +1,14 @@
 # LABIRINTO
 
-Desenvolvido com React 
+Desenvolvido com React
 
 ![Foto da tela inicial do Labirinto](./public/labirinto.jpg)
+
+Imagens meramente ilustrativas.
+
+# Apresentação
+
+![Foto da tela inicial do Labirinto](./video/2024-04-15_23-15-38.mp4)
 
 ## Inicializando
 

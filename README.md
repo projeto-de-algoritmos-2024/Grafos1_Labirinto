@@ -8,7 +8,7 @@ Imagens meramente ilustrativas.
 
 # Apresentação
 
-![Foto da tela inicial do Labirinto](./video/2024-04-15_23-15-38.mp4)
+[Vídeo de apresentação](https://youtu.be/PtG6DuonR3o)
 
 ## Inicializando
 

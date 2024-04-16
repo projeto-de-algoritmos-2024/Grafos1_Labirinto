@@ -35,3 +35,17 @@
   justify-content: center;
   align-items: center;
 }
+
+.container-position {
+  display: flex;
+  width: 100%;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  margin-bottom: 9rem;
+
+  color: #302ce8;
+}

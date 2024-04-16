@@ -1,116 +1,118 @@
-import "./game.css";
 import React, { useEffect, useState } from "react";
-
+import "./game.css";
 import setaDireita from "./assets/seta-direita.svg";
 import setaEsquerda from "./assets/seta-esquerda.svg";
 import setaFrente from "./assets/seta-frente.svg";
 import setaTras from "./assets/seta-tras.svg";
-
 import Background from "../../components/Background/background.js";
 import { Link } from "react-router-dom";
 
 export default function Game() {
-
   const [backgroundText, setBackgroundText] = useState("");
-  const [posicao, setPosicao] = useState([0,0]);
+  const [posicao, setPosicao] = useState([0, 0]);
   const [passos, setPassos] = useState(0);
-  const [caminho, setCaminho] = useState(0);
-  
-  // cria labirinto
+
   const labirinto = [
-    [1,1,1,0,0],
-    [0,1,1,0,0],
-    [0,0,1,0,0],
-    [0,0,1,1,-2],
-    [0,0,0,0,0]
-  ]
-  const tamanho = labirinto[1].length;
+    [1, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1],
+    [0, 0, 1, 0, 1],
+    [0, 0, -2, 0, 1],
+    [0, 0, 1, 1, 1],
+  ];
+  const tamanho = labirinto.length;
 
-  function BuscaProfundidade(){
-      let cam = 0;
-      const fila = []
-      const visitados = []
+  function BuscaLargura() {
+    const fila = [[0, 0, 0]]; // Adicionamos um terceiro elemento para rastrear a distância percorrida
+    const visitados = new Set(["0,0"]); // Usamos um conjunto para rastrear vértices visitados
 
-      fila.push([0,0]);
-      visitados.push([0,0]);
+    while (fila.length > 0) {
+      const [x, y, dist] = fila.shift();
 
-      var frente, tras, direita, esquerda;
-      while (fila.length > 0){
-        const vertice = fila.pop();
-        if(labirinto[vertice[0]][vertice[1]] === -2 ){ 
-          setCaminho(cam);
-        }
-
-        // inicia posicao somente se não extrapolar algum limite do labirinto
-        frente = tras = direita = esquerda = null;
-        if(vertice[0]+1 < tamanho) frente = [vertice[0]+1,vertice[1]];
-        if(vertice[0]-1 > 0) tras = [vertice[0]-1,vertice[1]];
-        if(vertice[1]+1 < tamanho) direita = [vertice[0],vertice[1]+1];
-        if(vertice[1]-1 > 0) esquerda = [vertice[0],vertice[1]-1];
-
-        const dir = [frente,tras,direita,esquerda];
-        for(let i of dir){
-          console.log(i)
-          if(i && labirinto[i[0]][i[1]] === 1 && visitados.indexOf(i) === -1){
-            visitados.push(i);
-            fila.push(i);
-          }
-        }
-        ++cam;
+      if (labirinto[x][y] === -2) {
+        return dist; // Se chegarmos à saída, retornamos a distância percorrida até agora
       }
-  }
 
-  function mudaPosicao(i,j){
-    // extrapola os limites do labirinto
-    if(posicao[0]+i > tamanho) return;
-    else if(posicao[0]+i < 0) return;
-    else if(posicao[1]+j > tamanho) return;
-    else if(posicao[1]+j < 0) return;
+      const movimentos = [
+        [x + 1, y], // Baixo
+        [x - 1, y], // Cima
+        [x, y + 1], // Direita
+        [x, y - 1], // Esquerda
+      ];
 
-    // não tem caminho para esta direcao
-    if(labirinto[posicao[0]+i][posicao[1]+j] === 0){
-      return;
+      for (const [nx, ny] of movimentos) {
+        if (
+          nx >= 0 &&
+          nx < tamanho &&
+          ny >= 0 &&
+          ny < tamanho &&
+          labirinto[nx][ny] !== 0 &&
+          !visitados.has(`${nx},${ny}`)
+        ) {
+          fila.push([nx, ny, dist + 1]);
+          visitados.add(`${nx},${ny}`);
+        }
+      }
     }
-    
-    // altera a posicao
-    setPosicao([posicao[0]+i,posicao[1]+j])
-    
-    // muda imagem de fundo
-    if(i === 1) setBackgroundText("TrasFrente")
-    else if(i === -1) setBackgroundText("TrasFrenteDir")
-    else if(j === 1) setBackgroundText("TrasFrenteEsq")
-    else setBackgroundText("TrasFrenteEsqDir")
 
-    // conta passos
-    setPassos(passos+1)
+    return -1; // Se não encontrarmos a saída, retornamos -1
   }
+  function mudaPosicao(dx, dy) {
+    const novoX = posicao[0] + dx;
+    const novoY = posicao[1] + dy;
+
+    if (
+      novoX >= 0 &&
+      novoX < tamanho &&
+      novoY >= 0 &&
+      novoY < tamanho &&
+      labirinto[novoX][novoY] !== 0
+    ) {
+      setPosicao([novoX, novoY]);
+
+      if (dx === 1) setBackgroundText("TrasFrente");
+      else if (dx === -1) setBackgroundText("TrasFrenteDir");
+      else if (dy === 1) setBackgroundText("TrasFrenteEsq");
+      else setBackgroundText("TrasFrenteEsqDir");
+
+      setPassos(passos + 1);
+    }
+  }
+
+  useEffect(() => {
+    BuscaLargura();
+  }, []); // Executa a buscaBFS uma vez, quando o componente é montado
+
+  const menorCaminho = BuscaLargura(); // Armazena o valor do menor caminho
 
   return (
     <div>
-      { labirinto[posicao[0]][posicao[1]] !== -2 && (
+      {labirinto[posicao[0]][posicao[1]] !== -2 && (
         <div className="container-buttons">
           <div className="container-out">
-          <h2>{labirinto[posicao[0]][posicao[1]]}</h2>
-          <p>{posicao[0]}, {posicao[1]}</p>
+            <div className="container-position">
+              <h2>
+                Posição atual: {posicao[0]}, {posicao[1]}
+              </h2>
+            </div>
 
-             <button
-               className="arrow-left button-horizontal"
-               onClick={() => mudaPosicao(0,-1)}
-             >
-               <img src={setaEsquerda} alt={`Seta para esquerda`} />
-             </button>
+            <button
+              className="arrow-left button-horizontal"
+              onClick={() => mudaPosicao(0, -1)}
+            >
+              <img src={setaEsquerda} alt={`Seta para esquerda`} />
+            </button>
 
             <div className="container-in">
               <button
                 className="arrow-up button-vertical"
-                onClick={() => mudaPosicao(+1,0)}
+                onClick={() => mudaPosicao(1, 0)}
               >
                 <img src={setaFrente} alt={`Seta para cima`} />
               </button>
 
               <button
                 className="arrow-down button-vertical"
-                onClick={() => mudaPosicao(-1,0)}
+                onClick={() => mudaPosicao(-1, 0)}
               >
                 <img src={setaTras} alt={`Seta para trás`} />
               </button>
@@ -118,7 +120,7 @@ export default function Game() {
 
             <button
               className="arrow-right button-horizontal"
-              onClick={() => mudaPosicao(0,+1)}
+              onClick={() => mudaPosicao(0, 1)}
             >
               <img src={setaDireita} alt={`Seta para direita`} />
             </button>
@@ -126,13 +128,14 @@ export default function Game() {
         </div>
       )}
 
-      { labirinto[posicao[0]][posicao[1]] === -2 && (
+      {labirinto[posicao[0]][posicao[1]] === -2 && (
         <div className="container-center-end">
           <div className="container">
             <div className="container-text">
               <h1>Parabéns</h1>
               <p>
-                Você terminou o labirinto com {passos} passos! Caso queira jogar novamente é só voltar ao menu inicial.
+                Você terminou o labirinto com {passos} passos! O menor caminho é
+                com {menorCaminho} passos.
               </p>
             </div>
 
@@ -143,7 +146,7 @@ export default function Game() {
         </div>
       )}
 
-      <Background text={backgroundText}/>
+      <Background text={backgroundText} />
     </div>
   );
 }
